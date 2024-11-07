@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sliding_sheet/sliding_sheet.dart';
+//mport 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:thuchanh/bottom_cart_sheet.dart';
 
 class BottomNavBar extends StatelessWidget {
@@ -26,30 +26,25 @@ class BottomNavBar extends StatelessWidget {
             color: Colors.white,
             size: 32,
           ),
-           InkWell(
-            onTap: (){
-              showSlidingBottomSheet(context, builder: (context){
-                return SlidingSheetDialog(
-                  elevation: 8,
-                  cornerRadius: 16,
-                  builder: (context, state) {
-                    return BottomCartSheet();
-                  },
-                );
-              });
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => BottomCartSheet()));
             },
-             child: Icon(
-             CupertinoIcons.cart_fill,
+            child: Icon(
+              CupertinoIcons.cart_fill,
               color: Colors.white,
               size: 32,
-                       ),
-           ),
-           Icon(
+            ),
+          ),
+          Icon(
             Icons.favorite,
             color: Colors.white,
             size: 32,
           ),
-           Icon(
+          Icon(
             Icons.person,
             color: Colors.white,
             size: 32,

@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sliding_sheet/sliding_sheet.dart';
-import 'package:thuchanh/bottom_cart_sheet.dart';
 
 class ItemBottomNavBar extends StatelessWidget {
-  const ItemBottomNavBar({super.key});
+  final String selectedSize;  
+
+  const ItemBottomNavBar({super.key, required this.selectedSize});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class ItemBottomNavBar extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  " add To Cart",
+                  "Add To Cart",
                   style: TextStyle(
                     fontSize: 23,
                     fontWeight: FontWeight.w500,
@@ -41,40 +41,11 @@ class ItemBottomNavBar extends StatelessWidget {
                   CupertinoIcons.cart_badge_plus,
                   color: Colors.white,
                   size: 32,
-                )
+                ),
               ],
             ),
           ),
-          Container(
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-              decoration: BoxDecoration(
-                  color: Color(0xFFF9A826),
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(0xFFF9A826).withOpacity(0.3),
-                      blurRadius: 5,
-                      spreadRadius: 1,
-                    )
-                  ]),
-              child: InkWell(
-                onTap: (){
-              showSlidingBottomSheet(context, builder: (context){
-                return SlidingSheetDialog(
-                  elevation: 8,
-                  cornerRadius: 16,
-                  builder: (context, state) {
-                    return BottomCartSheet();
-                  },
-                );
-              });
-            },
-                child: Icon(
-                  Icons.shopping_bag,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ))
+          
         ],
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:thuchanh/forgot_password.dart';
-import 'package:thuchanh/home_page.dart';
-import 'package:thuchanh/sign_up_screen.dart';
+import 'package:thuchanh/pages/forgot_password.dart';
+import 'package:thuchanh/pages/home_page.dart';
+import 'package:thuchanh/pages/sign_up_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

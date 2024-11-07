@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:thuchanh/home_page.dart';
-import 'package:thuchanh/item_page.dart';
-//import 'package:thuchanh/login_screen.dart';
-
+import 'package:thuchanh/model/cart_provider.dart';
+import 'package:thuchanh/pages/home_page.dart';
+import 'package:thuchanh/pages/item_page.dart';
+import 'package:provider/provider.dart';
 import 'package:thuchanh/splash_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -17,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(scaffoldBackgroundColor: Color(0xFFCEDDEE)),
-      home: SplashScreen(),
+      home: HomePage(),
       routes: {
         //"/": (context) => LoginScreen(),
         "homePage": (context) => HomePage(),
