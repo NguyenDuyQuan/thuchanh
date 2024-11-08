@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(scaffoldBackgroundColor: Color(0xFFCEDDEE)),
-      home: HomePage(),
+      home: SplashScreen(),
       routes: {
         //"/": (context) => LoginScreen(),
         "homePage": (context) => HomePage(),
