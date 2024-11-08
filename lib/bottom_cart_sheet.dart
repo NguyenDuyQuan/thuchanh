@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:thuchanh/model/cart_provider.dart';
 import 'package:thuchanh/pages/payment_screen.dart';
-
 
 class BottomCartSheet extends StatefulWidget {
   const BottomCartSheet({super.key});
@@ -11,64 +11,14 @@ class BottomCartSheet extends StatefulWidget {
 }
 
 class _BottomCartSheetState extends State<BottomCartSheet> {
-  List<Map<String, dynamic>> cartItems = [
-    {
-      "name": "Nike Shoe",
-      "price": 50,
-      "quantity": 2,
-      "image": "images/1.png",
-      "size": "28"
-    },
-    {
-      "name": "Nike Shoe",
-      "price": 75,
-      "quantity": 1,
-      "image": "images/2.png",
-      "size": "30"
-    },
-    {
-      "name": "Nike Shoe",
-      "price": 60,
-      "quantity": 3,
-      "image": "images/3.png",
-      "size": "34"
-    },
-  ];
-
-  final List<String> availableSizes = [
-    "28","29","30","31","32","33","34","35"
-  ];
-
-  double getTotal() {
-    return cartItems.fold(
-        0, (sum, item) => sum + item['price'] * item['quantity']);
-  }
-
-  void removeItem(int index) {
-    setState(() {
-      cartItems.removeAt(index);
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Xóa thành công'),
-        duration: Duration(seconds: 3),
-      ),
-    );
-    
-    Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pop(context);  
-    });
-  }
-
-  void updateSize(int index, String newSize) {
-    setState(() {
-      cartItems[index]['size'] = newSize;
-    });
-  }
+ 
+  List<String?> selectedSizes = [null, null, null, null];
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
+    final List<String> sizes = ['29', '30', '31', '32', '33', '34'];
+
     return Material(
       child: Container(
         padding: const EdgeInsets.only(top: 20),
@@ -80,12 +30,12 @@ class _BottomCartSheetState extends State<BottomCartSheet> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    for (int i = 0; i < cartItems.length; i++)
+                    for (int i = 0; i < cartProvider.cartItems.length; i++)
                       Container(
                         margin: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 15),
                         padding: const EdgeInsets.symmetric(horizontal: 10),
-                        height: 210,
+                        height: 240,
                         decoration: BoxDecoration(
                           color: const Color(0xFFF5F9FD),
                           borderRadius: BorderRadius.circular(10),
@@ -115,7 +65,7 @@ class _BottomCartSheetState extends State<BottomCartSheet> {
                                     ),
                                   ),
                                   Image.asset(
-                                    cartItems[i]['image'],
+                                    cartProvider.cartItems[i]['image'],
                                     height: 130,
                                     width: 130,
                                     fit: BoxFit.contain,
@@ -131,110 +81,53 @@ class _BottomCartSheetState extends State<BottomCartSheet> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    cartItems[i]['name'],
+                                    cartProvider.cartItems[i]['name'],
                                     style: const TextStyle(
                                       color: Color(0xFFF9A826),
                                       fontSize: 23,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                  Row(
-                                    children: [
-                                      const Text(
-                                        "Size: ",
-                                        style: TextStyle(
-                                          color: Color(0xFFF9A826),
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      DropdownButton<String>(
-                                        value: cartItems[i]['size'],
-                                        items: availableSizes
-                                            .map((size) => DropdownMenuItem(
-                                                  value: size,
-                                                  child: Text(size),
-                                                ))
-                                            .toList(),
-                                        onChanged: (newSize) {
-                                          if (newSize != null) {
-                                            updateSize(i, newSize);
-                                          }
-                                        },
-                                      ),
-                                    ],
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 8),
+                                    child: DropdownButton<String>(
+                                      hint: Text("Select Size"),
+                                      value: selectedSizes[i] ?? 
+                                              cartProvider.cartItems[i]['size'],
+                                      items: sizes.map((size) {
+                                        return DropdownMenuItem(
+                                          value: size,
+                                          child: Text(size),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedSizes[i] = value;
+                                        });
+                                      },
+                                    ),
                                   ),
-                                  Row(
-                                    children: [
-                                      InkWell(
-                                        onTap: () => setState(() {
-                                          if (cartItems[i]['quantity'] > 1) {
-                                            cartItems[i]['quantity']--;
-                                          }
-                                        }),
-                                        child: Container(
-                                          padding: const EdgeInsets.all(5),
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFFF5F9FD),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: const Color(0xFFF9A826)
-                                                    .withOpacity(0.3),
-                                                blurRadius: 5,
-                                                spreadRadius: 1,
-                                              ),
-                                            ],
-                                          ),
-                                          child: const Icon(
-                                            CupertinoIcons.minus,
-                                            size: 18,
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        child: Text(
-                                          cartItems[i]['quantity'].toString(),
-                                          style: const TextStyle(
-                                            color: Color(0xFFF9A826),
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                      InkWell(
-                                        onTap: () => setState(() {
-                                          cartItems[i]['quantity']++;
-                                        }),
-                                        child: Container(
-                                          padding: const EdgeInsets.all(5),
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFFF5F9FD),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: const Color(0xFFF9A826)
-                                                    .withOpacity(0.3),
-                                                blurRadius: 5,
-                                                spreadRadius: 1,
-                                              ),
-                                            ],
-                                          ),
-                                          child: const Icon(
-                                            CupertinoIcons.add,
-                                            size: 18,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                      height: 10),
                                   Text(
-                                    "\$${(cartItems[i]['price'] * cartItems[i]['quantity']).toStringAsFixed(2)}",
+                                    "Size: ${selectedSizes[i] ?? cartProvider.cartItems[i]['size']}",
+                                    style: const TextStyle(
+                                      color: Color(0xFFF9A826),
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    "\$${cartProvider.cartItems[i]['price'].toStringAsFixed(2)}",
                                     style: const TextStyle(
                                       color: Color(0xFFF9A826),
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Quantity: ${cartProvider.cartItems[i]['quantity']}",
+                                    style: const TextStyle(
+                                      color: Color(0xFF475269),
+                                      fontSize: 16,
                                     ),
                                   ),
                                 ],
@@ -246,7 +139,17 @@ class _BottomCartSheetState extends State<BottomCartSheet> {
                               child: Column(
                                 children: [
                                   InkWell(
-                                    onTap: () => removeItem(i),
+                                    onTap: () {
+                                      cartProvider.removeFromCart(
+                                          cartProvider.cartItems[i]);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Xóa thành công'),
+                                          duration: Duration(seconds: 3),
+                                        ),
+                                      );
+                                    },
                                     child: Container(
                                       padding: const EdgeInsets.all(8),
                                       decoration: BoxDecoration(
@@ -278,7 +181,6 @@ class _BottomCartSheetState extends State<BottomCartSheet> {
                 ),
               ),
             ),
-            
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               height: 80,
@@ -312,7 +214,7 @@ class _BottomCartSheetState extends State<BottomCartSheet> {
                       ),
                       const SizedBox(height: 9),
                       Text(
-                        "\$${getTotal().toStringAsFixed(2)}",
+                        "\$${cartProvider.totalPrice.toStringAsFixed(2)}",
                         style: const TextStyle(
                           fontSize: 20,
                           color: Color(0xFF475269),
@@ -323,13 +225,12 @@ class _BottomCartSheetState extends State<BottomCartSheet> {
                   ),
                   InkWell(
                     onTap: () {
-                      
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => PaymentScreen(
-                            cartItems: cartItems,
-                            total: getTotal(),
+                            cartItems: cartProvider.cartItems,
+                            total: cartProvider.totalPrice,
                           ),
                         ),
                       );

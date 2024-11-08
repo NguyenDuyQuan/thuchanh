@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:thuchanh/model/cart_provider.dart';
+import 'package:thuchanh/model/product.dart';
 
 class ItemWidget extends StatefulWidget {
   const ItemWidget({super.key});
@@ -10,11 +13,13 @@ class ItemWidget extends StatefulWidget {
 
 class _ItemWidgetState extends State<ItemWidget> {
   final List<String> sizes = ['29', '30', '31', '32', '33', '34'];
-  // Danh sách size đã chọn cho mỗi sản phẩm
+
   List<String?> selectedSizes = [null, null, null, null];
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
+
     return GridView.count(
       crossAxisCount: 2,
       childAspectRatio: 0.7,
@@ -24,9 +29,9 @@ class _ItemWidgetState extends State<ItemWidget> {
         for (int i = 0; i < 4; i++)
           InkWell(
             onTap: () {
-                        Navigator.pushNamed(context, "itemPage");
-                        //arguments: {'selectedSize';: selectedSizes[i], 'productId': i},
-                      },
+              Navigator.pushNamed(context, "itemPage");
+              
+            },
             child: Container(
               padding: EdgeInsets.only(left: 15, right: 15, top: 5),
               margin: EdgeInsets.all(8),
@@ -117,15 +122,26 @@ class _ItemWidgetState extends State<ItemWidget> {
                           child: InkWell(
                             onTap: () {
                               if (selectedSizes[i] != null) {
+                                Product product = Product(
+                                  id: "$i",
+                                  name: "Nike shoe ${i + 1}",
+                                  size: selectedSizes[i]!,
+                                  price: 55.0,
+                                  image: "images/${i + 1}.png",
+                                );
+                                
+
+                                cartProvider.addToCart(product);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                        'Added size ${selectedSizes[i]} to cart'),
+                                        'Add size ${selectedSizes[i]} to cart'),
                                   ),
                                 );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Please select a size')),
+                                  SnackBar(
+                                      content: Text('Please select a size')),
                                 );
                               }
                             },
@@ -135,7 +151,7 @@ class _ItemWidgetState extends State<ItemWidget> {
                               size: 28,
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   )

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:provider/provider.dart';
 import 'package:thuchanh/bottom_cart_sheet.dart';
 
 import 'package:thuchanh/item_widget.dart';
+import 'package:thuchanh/model/cart_provider.dart';
 import 'package:thuchanh/my_deawer.dart';
 import 'package:thuchanh/row_item_widget.dart';
 
@@ -36,22 +38,24 @@ class HomePage extends StatelessWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 15.0),
-            child: badges.Badge(
-              badgeContent: const Text(
-                '3', 
-                style: TextStyle(color: Colors.white),
-              ),
-              position: badges.BadgePosition.topEnd(top: 0, end: 0),
-              child: IconButton(
-                icon: const Icon(Icons.shopping_cart),
-                onPressed: () {
-                  
-                  Navigator.push(
+            child: Consumer<CartProvider>(
+              builder: (context, cartProvider, child) => badges.Badge(
+                badgeContent: Text(
+                  cartProvider.totalItems.toString(), 
+                  style: const TextStyle(color: Colors.white),
+                ),
+                position: badges.BadgePosition.topEnd(top: 0, end: 0),
+                child: IconButton(
+                  icon: const Icon(Icons.shopping_cart),
+                  onPressed: () {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                               BottomCartSheet()));
-                },
+                        builder: (BuildContext context) => BottomCartSheet(),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),

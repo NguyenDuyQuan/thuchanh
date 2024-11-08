@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-//import 'package:thuchanh1/home_page.dart';
 import 'package:thuchanh/pages/login_screen.dart';
 
-//import 'package:thuchanh1/sign_up_screen.dart';
+
 
 class ForgotPassword extends StatelessWidget {
   const ForgotPassword({super.key});
